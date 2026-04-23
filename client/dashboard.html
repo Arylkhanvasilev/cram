@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Cram</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Навигация -->
+    <nav class="navbar dashboard-nav">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🎓 Cram</span>
+            </div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link active">Главная</a>
+                <a href="classes.html" class="nav-link">Классы</a>
+                <a href="profile.html" class="nav-link">Профиль</a>
+                <span id="userName" class="user-name">Загрузка...</span>
+                <button id="logoutBtn" class="btn btn-outline">Выйти</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="dashboard">
+        <div class="container">
+            <!-- Приветствие и дата -->
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h1 id="greeting">Добро пожаловать!</h1>
+                    <p id="currentDate"></p>
+                </div>
+                <div class="quick-stats" id="quickStats">
+                    <!-- Статистика загружается динамически -->
+                </div>
+            </div>
+
+            <!-- AI Ассистент -->
+            <div id="aiWidget" class="ai-widget">
+                <div class="ai-widget-header">
+                    <h2>🤖 AI Ассистент</h2>
+                    <button id="refreshAI" class="btn-icon" title="Обновить рекомендации">🔄</button>
+                </div>
+                <div id="aiMessage" class="ai-message">
+                    <div class="loading-text">Анализирую твой прогресс...</div>
+                </div>
+                <div id="aiSuggestions" class="ai-suggestions"></div>
+            </div>
+
+            <!-- Прогресс -->
+            <div class="progress-section">
+                <div class="section-header">
+                    <h2>📊 Твой прогресс</h2>
+                    <button class="btn btn-small btn-outline" onclick="dashboard.refreshProgress()">
+                        🔄 Обновить
+                    </button>
+                </div>
+
+                <!-- Общий прогресс -->
+                <div class="overall-progress">
+                    <div class="progress-info">
+                        <span class="progress-label">Общий прогресс</span>
+                        <span class="progress-value" id="overallProgressValue">0%</span>
+                    </div>
+                    <div class="progress-bar large">
+                        <div class="progress-fill" id="overallProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Прогресс по предметам -->
+                <div id="subjectsProgress" class="subjects-progress">
+                    <div class="loading-placeholder">Загрузка прогресса...</div>
+                </div>
+            </div>
+
+            <!-- Задания -->
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2>📝 Мои задания</h2>
+                    <div class="tasks-filters">
+                        <select id="taskFilter" class="filter-select">
+                            <option value="all">Все задания</option>
+                            <option value="pending">Ожидают</option>
+                            <option value="submitted">Сданные</option>
+                            <option value="overdue">Просроченные</option>
+                        </select>
+                        <button class="btn btn-small btn-primary" id="createTaskBtn" style="display: none;">
+                            + Создать задание
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Статистика по заданиям -->
+                <div class="tasks-stats" id="tasksStats">
+                    <!-- Статистика загружается динамически -->
+                </div>
+
+                <!-- Список заданий -->
+                <div id="tasksContainer" class="tasks-container">
+                    <div class="loading-placeholder">
+                        <div class="spinner"></div>
+                        <p>Загружаем задания...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Уведомления -->
+            <div id="notificationContainer" class="notification-container"></div>
+        </div>
+    </main>
+
+    <!-- Модальное окно создания задания -->
+    <div id="taskModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>📝 Создать новое задание</h3>
+                <button class="modal-close" onclick="dashboard.closeTaskModal()">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskTitle">Название задания *</label>
+                        <input type="text" id="taskTitle" required placeholder="Например: Домашнее чтение">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskSubject">Предмет *</label>
+                        <input type="text" id="taskSubject" required placeholder="Литература">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription">Описание задания</label>
+                    <textarea id="taskDescription" rows="4"
+                        placeholder="Подробно опишите, что нужно сделать..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDeadline">Срок сдачи *</label>
+                        <input type="datetime-local" id="taskDeadline" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Выберите учеников *</label>
+                    <div class="students-selection">
+                        <div class="selection-header">
+                            <button type="button" class="btn btn-small btn-outline"
+                                onclick="dashboard.selectAllStudents()">
+                                Выбрать всех
+                            </button>
+                            <button type="button" class="btn btn-small btn-outline"
+                                onclick="dashboard.deselectAllStudents()">
+                                Снять выбор
+                            </button>
+                            <span class="selection-count">Выбрано: <span id="selectedCount">0</span></span>
+                        </div>
+                        <div id="studentsList" class="students-checklist">
+                            <div class="loading-placeholder">Загрузка списка учеников...</div>
+                        </div>
+                    </div>
+                    <small class="form-hint">Выберите одного или несколько учеников</small>
+                </div>
+
+                <div id="taskFormError" class="error-message" style="display: none;"></div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="dashboard.closeTaskModal()">
+                        Отмена
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        🚀 Создать и назначить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно деталей задания -->
+    <div id="taskDetailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="detailTaskTitle">Детали задания</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="taskDetailContent">
+                <!-- Содержимое загружается динамически -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

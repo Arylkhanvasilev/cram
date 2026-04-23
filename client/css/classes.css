@@ -1,0 +1,443 @@
+/* classes.css - Стили для страницы классов */
+
+.classes-page {
+    padding: 2rem 0;
+    min-height: calc(100vh - 70px);
+    background: var(--gray-100);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: var(--gray-900);
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Приглашения */
+.invitations-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.invitations-section h2 {
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.invitations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.invitation-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.invitation-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.invitation-class {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.invitation-teacher {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.invitation-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Сетка классов */
+.classes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.class-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.class-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.class-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.class-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.class-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+    color: var(--gray-900);
+}
+
+.class-subject {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.class-stats {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+.class-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.class-grade {
+    padding: 0.25rem 0.75rem;
+    background: var(--gray-100);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+/* Список учеников */
+.students-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.student-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--gray-100);
+    border-radius: 12px;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.student-name {
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.student-email {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.student-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.student-progress {
+    text-align: center;
+}
+
+.progress-mini {
+    width: 80px;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 0.25rem;
+}
+
+.progress-mini-fill {
+    height: 100%;
+    background: var(--success);
+}
+
+/* Вкладки */
+.detail-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--gray-200);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    background: var(--gray-100);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Список заданий в классе */
+.class-assignment-item {
+    background: var(--gray-100);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.assignment-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.assignment-status.pending {
+    background: var(--warning);
+    color: var(--dark);
+}
+
+.assignment-status.submitted {
+    background: var(--info);
+    color: white;
+}
+
+.assignment-status.overdue {
+    background: var(--danger);
+    color: white;
+}
+
+.assignment-deadline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+}
+
+.assignment-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Модальные окна */
+.modal-large .modal-content {
+    max-width: 800px;
+    width: 95%;
+}
+
+/* Опасная зона */
+.danger-zone {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--danger);
+}
+
+.danger-zone h4 {
+    color: var(--danger);
+    margin-bottom: 1rem;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .class-card,
+[data-theme="dark"] .modal-content {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .student-item,
+[data-theme="dark"] .class-assignment-item {
+    background: #2a2a40;
+}
+
+[data-theme="dark"] .stat-value,
+[data-theme="dark"] .student-name,
+[data-theme="dark"] .class-info h3 {
+    color: white;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: start;
+        gap: 1rem;
+    }
+    
+    .classes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .student-item {
+        flex-direction: column;
+        align-items: start;
+        gap: 0.75rem;
+    }
+    
+    .student-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .invitation-card {
+        flex-direction: column;
+        align-items: start;
+        gap: 1rem;
+    }
+    
+    .invitation-actions {
+        width: 100%;
+    }
+    
+    .invitation-actions .btn {
+        flex: 1;
+    }
+}
+
+/* Утилиты */
+.teacher-only,
+.student-only {
+    display: none;
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-warning {
+    color: var(--warning);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+/* Тёмная тема для классов */
+[data-theme="dark"] .classes-page {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .class-card,
+[data-theme="dark"] .invitations-section {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .invitations-section {
+    background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3e 100%);
+}
+
+[data-theme="dark"] .student-item,
+[data-theme="dark"] .class-assignment-item {
+    background: var(--gray-100);
+}
+
+[data-theme="dark"] .detail-tabs {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .tab-btn:hover {
+    background: var(--gray-200);
+}
