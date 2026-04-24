@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cram - Статистика</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 36px;
+            font-weight: var(--font-extrabold);
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-family: var(--font-primary);
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .subject-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .subject-row__name {
+            font-family: var(--font-primary);
+            font-weight: var(--font-semibold);
+            color: var(--color-text);
+        }
+
+        .subject-row__pct {
+            font-family: var(--font-heading);
+            font-weight: var(--font-bold);
+            color: var(--color-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <main class="main-scroll">
+            <div class="bounded-block">
+                <header class="top-bar">
+                    <a href="profile.html" class="top-bar__user">
+                        <div class="avatar avatar--md" id="userAvatar" style="background: var(--color-primary);">
+                            <span id="avatarText">?</span>
+                        </div>
+                        <div class="user-text">
+                            <span class="user-greeting">Привет,</span>
+                            <span class="user-name" id="userName">Загрузка...</span>
+                        </div>
+                    </a>
+                </header>
+                <h2 class="today-title">📊 Статистика</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="stat-value" id="totalTasks">0</div>
+                    <div class="stat-label">Всего задач</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value" id="doneTasks">0</div>
+                    <div class="stat-label">Выполнено</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value" id="overdueTasks">0</div>
+                    <div class="stat-label">Просрочено</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value" id="avgGrade">-</div>
+                    <div class="stat-label">Средний балл</div>
+                </div>
+            </div>
+
+            <h3 class="section-title" style="margin-bottom:16px;">По предметам</h3>
+            <div class="card" id="subjectsStats"></div>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg></a>
+            <a href="tasks.html" class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg></a>
+            <a href="statistics.html" class="nav-item active"><svg width="24" height="24" viewBox="0 0 24 24"
+                    fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg></a>
+            <a href="profile.html" class="nav-item nav-item--profile">
+                <img class="nav-avatar" id="navAvatar" src="" alt="Профиль"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div id="navAvatarFallback" class="avatar avatar--sm"
+                    style="background: var(--color-primary); display: none;">?</div>
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        async function loadStats() {
+            if (!Auth.requireAuth()) return;
+
+            const user = Auth.getUser();
+            const firstName = (user.name || 'Пользователь').split(' ')[0];
+
+            const navFallback = document.getElementById('navAvatarFallback');
+            const navAvatar = document.getElementById('navAvatar');
+            if (navFallback) {
+                navFallback.textContent = firstName.charAt(0).toUpperCase();
+                navFallback.style.display = 'flex';
+            }
+            if (navAvatar) {
+                navAvatar.style.display = 'none';
+            }
+            
+            document.getElementById('userName').textContent = firstName;
+            document.getElementById('avatarText').textContent = firstName.charAt(0).toUpperCase();
+
+            try {
+                const tasks = await api.get('/assignments');
+                const total = tasks.length;
+                const done = tasks.filter(t => t.status === 'submitted' || t.status === 'graded').length;
+                const overdue = tasks.filter(t => t.status === 'pending' && new Date(t.deadline) < new Date()).length;
+                const graded = tasks.filter(t => t.grade).map(t => t.grade);
+                const avg = graded.length ? (graded.reduce((a, b) => a + b, 0) / graded.length).toFixed(1) : '-';
+
+                document.getElementById('totalTasks').textContent = total;
+                document.getElementById('doneTasks').textContent = done;
+                document.getElementById('overdueTasks').textContent = overdue;
+                document.getElementById('avgGrade').textContent = avg;
+
+                const subjects = {};
+                tasks.forEach(t => {
+                    const s = t.subject || 'Другое';
+                    if (!subjects[s]) subjects[s] = { total: 0, done: 0 };
+                    subjects[s].total++;
+                    if (t.status === 'submitted' || t.status === 'graded') subjects[s].done++;
+                });
+
+                let html = '';
+                for (const [name, stats] of Object.entries(subjects)) {
+                    const pct = Math.round((stats.done / stats.total) * 100);
+                    html += `<div class="subject-row"><span class="subject-row__name">${name}</span><span class="subject-row__pct">${stats.done}/${stats.total} (${pct}%)</span></div>`;
+                }
+                document.getElementById('subjectsStats').innerHTML = html || '<p style="color: var(--color-text-muted);">Нет данных</p>';
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadStats);
+    </script>
+</body>
+
+</html>

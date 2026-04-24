@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cram - Профиль</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .profile-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .profile-name {
+            font-family: var(--font-heading);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-extrabold);
+            margin-top: 12px;
+            color: var(--color-text);
+        }
+
+        .profile-email {
+            font-family: var(--font-primary);
+            color: var(--color-text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-weight: var(--font-medium);
+            color: var(--color-text);
+            transition: var(--transition-base);
+        }
+
+        .menu-item:hover {
+            background: var(--color-surface-hover);
+        }
+
+        .menu-item--danger {
+            color: var(--color-danger);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <main class="main-scroll">
+            <div class="bounded-block">
+                <div class="profile-header">
+                    <div class="avatar avatar--lg" style="background: var(--color-primary); margin: 0 auto;"
+                        id="profileAvatar">?</div>
+                    <h2 class="profile-name" id="profileName">Загрузка...</h2>
+                    <p class="profile-email" id="profileEmail">email@example.com</p>
+                </div>
+            </div>
+
+            <a class="menu-item" onclick="editProfile()">✏️ Редактировать профиль</a>
+            <a class="menu-item" href="login.html" onclick="Auth.logout()">🚪 Выйти</a>
+            <a class="menu-item menu-item--danger" onclick="deleteAccount()">🗑️ Удалить аккаунт</a>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg></a>
+            <a href="tasks.html" class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg></a>
+            <a href="statistics.html" class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg></a>
+            <a href="profile.html" class="nav-item nav-item--profile active">
+                <img class="nav-avatar" id="navAvatar" src="" alt="Профиль"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div id="navAvatarFallback" class="avatar avatar--sm"
+                    style="background: var(--color-primary); display: none;">?</div>
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function loadProfile() {
+            if (!Auth.requireAuth()) return;
+            const user = Auth.getUser();
+            const firstName = (user.name || 'Пользователь').split(' ')[0];
+
+            const navFallback = document.getElementById('navAvatarFallback');
+            const navAvatar = document.getElementById('navAvatar');
+            if (navFallback) {
+                navFallback.textContent = firstName.charAt(0).toUpperCase();
+                navFallback.style.display = 'flex';
+            }
+            if (navAvatar) {
+                navAvatar.style.display = 'none';
+            }
+
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileAvatar').textContent = firstName.charAt(0).toUpperCase();
+        }
+
+        async function editProfile() {
+            const user = Auth.getUser();
+            const name = prompt('Новое имя:', user.name);
+            if (name) {
+                await api.put('/auth/profile', { name });
+                user.name = name;
+                localStorage.setItem('user', JSON.stringify(user));
+                location.reload();
+            }
+        }
+
+        async function deleteAccount() {
+            if (confirm('Удалить аккаунт безвозвратно?')) {
+                await api.delete('/auth/profile');
+                Auth.logout();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+
+</html>

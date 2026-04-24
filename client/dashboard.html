@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cram - Дашборд</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+    <div class="app">
+        <main class="main-scroll">
+            <!-- Bounded блок: профиль + прогресс -->
+            <div class="bounded-block">
+                <header class="top-bar">
+                    <a href="profile.html" class="top-bar__user">
+                        <div class="avatar avatar--md" id="userAvatar" style="background: var(--color-primary);">
+                            <span id="avatarText">?</span>
+                        </div>
+                        <div class="user-text">
+                            <span class="user-name" id="userName">Загрузка...</span>
+                        </div>
+                    </a>
+                    <button class="notif-btn">
+                        <a href="notifications.html" class="notif-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                            <span class="notif-btn__badge" id="notifBadge">0</span>
+                        </a>
+                    </button>
+                </header>
+
+                <!-- Заголовок Сегодня -->
+                <h2 class="today-title">Сегодня</h2>
+
+                <!-- Выполнено X из Y задач -->
+                <div class="progress-block">
+                    <div class="progress-block__header">
+                        <span class="progress-block__title">Выполнено</span>
+                        <span class="progress-block__stats" id="progressStats">0 из 0 задач</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress__fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-block__footer">
+                        <span class="progress-block__percent" id="progressPercent">Прогресс 0%</span>
+                        <span class="progress-block__remaining" id="progressRemaining">Осталось 0 заданий</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Даты -->
+            <div class="date-scroll" id="dateScroll"></div>
+
+            <!-- Задачи -->
+            <div class="section-head">
+                <h2 class="section-title">Задачи</h2>
+                <button class="btn-icon" id="addTaskBtn" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div id="tasksContainer"></div>
+
+            <!-- Прошлые -->
+            <div class="section-head section-head--past">
+                <h2 class="section-title">Прошлые</h2>
+            </div>
+            <div id="pastTasksContainer"></div>
+        </main>
+
+        <!-- Навбар -->
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </a>
+            <a href="tasks.html" class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </a>
+            <a href="statistics.html" class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </a>
+            <a href="profile.html" class="nav-item nav-item--profile">
+                <img class="nav-avatar" id="navAvatar" src="" alt="Профиль"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div id="navAvatarFallback" class="avatar avatar--sm"
+                    style="background: var(--color-primary); display: none;">?</div>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Модалка создания задачи -->
+    <div class="modal" id="taskModal" style="display: none;">
+        <div class="modal__backdrop" onclick="closeTaskModal()"></div>
+        <div class="modal__sheet">
+            <div class="modal__handle"></div>
+            <h3
+                style="font-family: var(--font-heading); font-size: var(--font-size-xl); font-weight: var(--font-extrabold); margin-bottom: 20px;">
+                Новая задача</h3>
+            <form id="taskForm">
+                <input class="input" type="text" id="taskTitle" placeholder="Название задачи" required>
+                <textarea class="input" id="taskDesc" rows="2" placeholder="Описание (необязательно)"
+                    style="margin-top: 8px;"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <input class="input" type="text" id="taskSubject" placeholder="Предмет" required style="flex: 1;">
+                    <input class="input" type="datetime-local" id="taskDeadline" required style="flex: 1;">
+                </div>
+
+                <!-- Выбор классов -->
+                <div style="margin-top: 16px;">
+                    <label
+                        style="font-family: var(--font-primary); font-weight: var(--font-semibold); font-size: var(--font-size-sm); color: var(--color-text); margin-bottom: 8px; display: block;">
+                        Выберите классы:
+                    </label>
+                    <div id="classCheckboxes"
+                        style="max-height: 200px; overflow-y: auto; background: var(--color-bg); border-radius: var(--radius-md); padding: 12px;">
+                        <p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">Загрузка классов...
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-primary-full" style="margin-top: 16px;">Создать
+                    задачу</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="notificationContainer"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
