@@ -1,0 +1,185 @@
+<div class="section-head">
+    <h2 class="section-title" id="studentsPageTitle">Ученики</h2>
+</div>
+
+<div class="section-head">
+    <button class="back-btn" onclick="document.querySelector('.nav-item[data-page=profile]').click()"
+        style="margin-bottom: 12px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>Назад в профиль</span>
+    </button>
+    <h2 class="section-title" id="studentsPageTitle">Ученики</h2>
+</div>
+
+<!-- ДЛЯ УЧЕНИКА -->
+<div id="studentBlock">
+    <div class="card" style="margin-bottom: 20px;">
+        <h4 style="margin-bottom: 12px;">Отправить запрос учителю</h4>
+        <input class="input" type="text" id="teacherEmail" placeholder="Email учителя" style="margin-bottom: 8px;">
+        <input class="input" type="text" id="joinSubject" placeholder="Предмет">
+        <button class="btn btn-primary btn-primary-full" onclick="sendJoinRequest()" style="margin-top: 8px;">Отправить
+            запрос</button>
+        <p id="joinMsg" style="font-size:13px;margin-top:8px;"></p>
+    </div>
+    <h3>Мои запросы</h3>
+    <div id="myRequestsList">
+        <p style="color:var(--color-text-muted);">Загрузка...</p>
+    </div>
+    <h3 style="margin-top:20px;">Мои классы</h3>
+    <div id="myClassesList">
+        <p style="color:var(--color-text-muted);">Загрузка...</p>
+    </div>
+</div>
+
+<!-- ДЛЯ УЧИТЕЛЯ -->
+<div id="teacherBlock">
+    <h3>📨 Входящие запросы</h3>
+    <div id="incomingRequests">
+        <p style="color:var(--color-text-muted);">Загрузка...</p>
+    </div>
+    <h3 style="margin-top:20px;">Мои ученики</h3>
+    <div id="studentsList">
+        <p style="color:var(--color-text-muted);">Загрузка...</p>
+    </div>
+    <div class="card" style="margin-top:16px;">
+        <h4 style="margin-bottom:12px;">Добавить ученика</h4>
+        <input class="input" type="text" id="studentEmail" placeholder="Email ученика" style="margin-bottom:8px;">
+        <input class="input" type="text" id="studentSubject" placeholder="Предмет">
+        <button class="btn btn-primary btn-primary-full" onclick="addStudent()" style="margin-top:8px;">+
+            Добавить</button>
+        <p id="addMsg" style="font-size:13px;margin-top:8px;"></p>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var user = Auth.getUser();
+        if (!user) return;
+
+        var role = user.role;
+
+        document.getElementById('studentsPageTitle').textContent = role === 'teacher' ? '👥 Мои ученики' : '👥 Учителя';
+        document.getElementById('studentBlock').style.display = role === 'student' ? 'block' : 'none';
+        document.getElementById('teacherBlock').style.display = role === 'teacher' ? 'block' : 'none';
+
+        // ===== УЧЕНИК =====
+        if (role === 'student') {
+            loadMyRequests();
+            loadMyClasses();
+        }
+
+        // ===== УЧИТЕЛЬ =====
+        if (role === 'teacher') {
+            loadIncomingRequests();
+            loadStudents();
+        }
+
+        // Функции
+        window.sendJoinRequest = async function () {
+            var email = document.getElementById('teacherEmail').value.trim();
+            var subject = document.getElementById('joinSubject').value.trim();
+            var msg = document.getElementById('joinMsg');
+            if (!email) { msg.textContent = 'Введите email'; msg.style.color = 'red'; return; }
+            try {
+                await api.post('/classes/join-request', { teacherEmail: email, subject: subject });
+                msg.textContent = 'Запрос отправлен!';
+                msg.style.color = 'green';
+                loadMyRequests();
+            } catch (e) {
+                msg.textContent = 'Ошибка: ' + (e.message || '');
+                msg.style.color = 'red';
+            }
+        };
+
+        window.loadMyRequests = async function () {
+            try {
+                var requests = await api.get('/classes/my-requests');
+                var c = document.getElementById('myRequestsList');
+                if (!requests.length) { c.innerHTML = '<div class="empty-state"><p>Нет запросов</p></div>'; return; }
+                c.innerHTML = requests.map(function (r) {
+                    return '<div style="display:flex;justify-content:space-between;padding:12px;background:var(--color-surface);border-radius:12px;margin-bottom:8px;">' +
+                        '<div><div style="font-weight:600;">' + r.teacher_name + '</div><div style="font-size:13px;color:var(--color-text-muted);">' + r.teacher_email + '</div></div>' +
+                        '<span style="color:' + (r.status === 'accepted' ? 'green' : r.status === 'rejected' ? 'red' : 'orange') + ';">' +
+                        (r.status === 'pending' ? 'Ожидает' : r.status === 'accepted' ? 'Принят' : 'Отклонён') + '</span></div>';
+                }).join('');
+            } catch (e) { }
+        };
+
+        window.loadMyClasses = async function () {
+            try {
+                var classes = await api.get('/classes/student');
+                var c = document.getElementById('myClassesList');
+                if (!classes.length) { c.innerHTML = '<div class="empty-state"><p>Нет классов</p></div>'; return; }
+                c.innerHTML = classes.map(function (cls) {
+                    return '<div style="padding:12px;background:var(--color-surface);border-radius:12px;margin-bottom:8px;">' +
+                        '<div style="font-weight:600;">' + cls.name + '</div>' +
+                        '<div style="font-size:13px;color:var(--color-text-muted);">' + (cls.teacher_name || '') + ' · ' + (cls.subject || '') + '</div></div>';
+                }).join('');
+            } catch (e) { }
+        };
+
+        // ===== УЧИТЕЛЬ =====
+        window.loadIncomingRequests = async function () {
+            try {
+                var requests = await api.get('/classes/incoming-requests');
+                var c = document.getElementById('incomingRequests');
+                if (!requests.length) { c.innerHTML = '<div class="empty-state"><p>Нет запросов</p></div>'; return; }
+                c.innerHTML = requests.map(function (r) {
+                    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--color-surface);border-radius:12px;margin-bottom:8px;">' +
+                        '<div><div style="font-weight:600;">' + r.from_user_name + '</div><div style="font-size:13px;color:var(--color-text-muted);">' + r.from_user_email + '</div></div>' +
+                        '<div style="display:flex;gap:8px;">' +
+                        '<button onclick="handleRequest(' + r.id + ',\'accepted\')" style="width:34px;height:34px;border-radius:8px;border:none;background:#E9FFD6;color:#004001;cursor:pointer;font-size:16px;">✓</button>' +
+                        '<button onclick="handleRequest(' + r.id + ',\'rejected\')" style="width:34px;height:34px;border-radius:8px;border:none;background:#FEE2E2;color:#991B1B;cursor:pointer;font-size:16px;">✕</button>' +
+                        '</div></div>';
+                }).join('');
+            } catch (e) { }
+        };
+
+        window.handleRequest = async function (id, status) {
+            await api.patch('/classes/handle-request/' + id, { status: status });
+            loadIncomingRequests();
+            loadStudents();
+        };
+
+        window.goBackToProfile = function () {
+            document.querySelector('.nav-item[data-page="profile"]').click();
+        };
+
+        window.loadStudents = async function () {
+            try {
+                var students = await api.get('/classes/my-students');
+                var c = document.getElementById('studentsList');
+                if (!students.length) { c.innerHTML = '<div class="empty-state"><p>Нет учеников</p></div>'; return; }
+                c.innerHTML = students.map(function (s) {
+                    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--color-surface);border-radius:12px;margin-bottom:8px;">' +
+                        '<div><div style="font-weight:600;">' + s.name + '</div><div style="font-size:13px;color:var(--color-text-muted);">' + s.email + '</div></div>' +
+                        '<button onclick="removeStudent(' + s.id + ')" style="background:none;border:none;font-size:20px;color:var(--color-text-muted);cursor:pointer;">×</button></div>';
+                }).join('');
+            } catch (e) { }
+        };
+
+        window.addStudent = async function () {
+            var email = document.getElementById('studentEmail').value.trim();
+            var subject = document.getElementById('studentSubject').value.trim();
+            var msg = document.getElementById('addMsg');
+            if (!email) { msg.textContent = 'Введите email'; msg.style.color = 'red'; return; }
+            try {
+                await api.post('/classes/add-student', { email: email, subject: subject });
+                msg.textContent = 'Добавлен!';
+                msg.style.color = 'green';
+                loadStudents();
+            } catch (e) {
+                msg.textContent = 'Ошибка: ' + (e.message || '');
+                msg.style.color = 'red';
+            }
+        };
+
+        window.removeStudent = async function (id) {
+            if (!confirm('Удалить?')) return;
+            await api.delete('/classes/remove-student/' + id);
+            loadStudents();
+        };
+    })();
+</script>

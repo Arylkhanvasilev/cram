@@ -1,0 +1,406 @@
+<div id="profileMain">
+    <div class="profile-page-wrapper">
+
+        <!-- Профиль (фон #A4FF55) -->
+        <div class="profile-card profile-card--main">
+            <div class="profile-top">
+                <div class="profile-avatar" id="profileAvatar">?</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileName">Загрузка...</div>
+                    <div class="profile-role" id="profileRole">Ученик</div>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="profile-btn" onclick="showEditProfile()" style="border-bottom:none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" />
+                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Редактировать</span>
+                </button>
+                <button class="profile-btn" onclick="linkAccount()" style="border-bottom:none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" />
+                        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>Привязать аккаунт</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Настройки -->
+        <div class="profile-card">
+            <button class="profile-btn" onclick="goToClasses()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 3a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Мои классы</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="notifySettings()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Настройка уведомлений</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="syncCalendar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Синхронизация с календарём</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="otherSettings()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Другие настройки</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="aboutApp()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>О приложении</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Информация -->
+        <div class="profile-card">
+            <button class="profile-btn" onclick="termsOfUse()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" />
+                    <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Условия использования</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="helpCenter()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Помощь</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="profile-btn" onclick="rateApp()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Оценить приложение</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Выход -->
+        <div class="profile-card">
+            <button class="profile-btn profile-btn--danger" onclick="Auth.logout()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Выйти</span>
+                <svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Редактирование профиля (скрыто) -->
+<div id="profileEdit" style="display:none;">
+    <button class="back-btn" onclick="showProfileMain()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>Назад</span>
+    </button>
+
+    <div class="profile-card" style="margin-top:16px;">
+        <div class="profile-top">
+            <div class="profile-avatar" id="editAvatar">?</div>
+            <div class="profile-info">
+                <div class="profile-name" id="editName">Загрузка...</div>
+                <button class="change-avatar-btn" onclick="changeAvatar()">Изменить аватар</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <label class="edit-label">Имя</label>
+        <input class="input" type="text" id="editFirstName" placeholder="Имя">
+        <label class="edit-label" style="margin-top:12px;">Фамилия</label>
+        <input class="input" type="text" id="editLastName" placeholder="Фамилия">
+        <label class="edit-label" style="margin-top:12px;">Класс</label>
+        <input class="input" type="number" id="editGrade" placeholder="Класс" min="1" max="11">
+        <label class="edit-label" style="margin-top:12px;">Роль</label>
+        <input class="input" type="text" id="editRole" disabled>
+    </div>
+
+    <div class="profile-card">
+        <label class="edit-label">Номер телефона</label>
+        <input class="input" type="tel" id="editPhone" placeholder="+7 (999) 123-45-67">
+        <label class="edit-label" style="margin-top:12px;">Email</label>
+        <input class="input" type="email" id="editEmail" disabled>
+        <label class="edit-label" style="margin-top:12px;">Пароль</label>
+        <input class="input" type="password" id="editPassword" placeholder="Новый пароль">
+        <p style="font-size:12px;color:var(--color-text-muted);margin-top:4px;">Последнее изменение: <span
+                id="lastPasswordChange">никогда</span></p>
+    </div>
+
+    <button class="btn btn-primary btn-primary-full" onclick="saveProfileChanges()" style="margin-top:10px;">
+        Применить изменения
+    </button>
+</div>
+
+<script>
+    (function () {
+        var user = Auth.getUser();
+        if (!user) return;
+
+        var roleNames = { student: 'Ученик', teacher: 'Учитель', parent: 'Родитель' };
+
+        // Главный экран
+        document.getElementById('profileName').textContent = user.name || 'Пользователь';
+        document.getElementById('profileAvatar').textContent = (user.name || '?')[0].toUpperCase();
+        document.getElementById('profileRole').textContent = roleNames[user.role] || user.role;
+
+        // Экран редактирования
+        var nameParts = (user.name || '').split(' ');
+        document.getElementById('editName').textContent = user.name || 'Пользователь';
+        document.getElementById('editAvatar').textContent = (user.name || '?')[0].toUpperCase();
+        document.getElementById('editFirstName').value = nameParts[0] || '';
+        document.getElementById('editLastName').value = nameParts.slice(1).join(' ') || '';
+        document.getElementById('editGrade').value = user.grade || '';
+        document.getElementById('editRole').value = roleNames[user.role] || user.role;
+        document.getElementById('editEmail').value = user.email || '';
+        document.getElementById('editPhone').value = user.phone || '';
+
+        // Переключение
+        window.showEditProfile = function () {
+            document.getElementById('profileMain').style.display = 'none';
+            document.getElementById('profileEdit').style.display = 'block';
+        };
+
+        window.showProfileMain = function () {
+            document.getElementById('profileMain').style.display = 'block';
+            document.getElementById('profileEdit').style.display = 'none';
+        };
+
+        window.saveProfileChanges = async function () {
+            var data = {
+                name: document.getElementById('editFirstName').value + ' ' + document.getElementById('editLastName').value,
+                grade: parseInt(document.getElementById('editGrade').value) || null,
+                phone: document.getElementById('editPhone').value
+            };
+
+            var password = document.getElementById('editPassword').value;
+            if (password) data.password = password;
+
+            try {
+                await api.put('/auth/profile', data);
+                user.name = data.name;
+                user.grade = data.grade;
+                user.phone = data.phone;
+                localStorage.setItem('user', JSON.stringify(user));
+                location.reload();
+            } catch (e) {
+                showToast('Ошибка сохранения', 'error');
+            }
+        };
+        window.goToClasses = function () {
+            loadPage('students');
+        };
+        window.changeAvatar = function () { showToast('Аватар обновлён (демо)'); };
+
+        // Остальные функции
+        window.linkAccount = function () { showToast('Функция в разработке'); };
+        window.notifySettings = function () { showToast('Настройки уведомлений'); };
+        window.syncCalendar = function () { showToast('Синхронизация с календарём'); };
+        window.otherSettings = function () { showToast('Другие настройки'); };
+        window.aboutApp = function () { showToast('Cram v1.0 — платформа для учёбы'); };
+        window.termsOfUse = function () { showToast('Условия использования'); };
+        window.helpCenter = function () { showToast('Помощь: support@cram.ru'); };
+        window.rateApp = function () { showToast('Оцените приложение! ⭐'); };
+    })();
+</script>
+
+<style>
+    .profile-page-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: 17px;
+    }
+
+    .profile-card--main {
+        background: #A4FF55;
+        border-color: #A4FF55;
+    }
+
+    .profile-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #004001;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    .profile-role {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .profile-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 10px 0;
+        background: none;
+        border: none;
+        border-bottom: 1px solid var(--color-border-light);
+        cursor: pointer;
+        font-family: var(--font-primary);
+        font-size: 15px;
+        color: #000;
+        text-align: left;
+    }
+
+    .profile-btn:last-child {
+        border-bottom: none;
+    }
+
+    .profile-btn span {
+        flex: 1;
+    }
+
+    .profile-btn svg {
+        flex-shrink: 0;
+        color: #555;
+    }
+
+    .profile-btn .arrow-right {
+        color: #aaa;
+    }
+
+    .profile-btn--danger {
+        color: #EF4444;
+    }
+
+    .profile-btn--danger svg {
+        color: #EF4444;
+    }
+
+    .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 8px 0;
+        color: #000;
+    }
+
+    .change-avatar-btn {
+        background: none;
+        border: none;
+        color: #004001;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 4px 0;
+        text-align: left;
+    }
+
+    .edit-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #000;
+        display: block;
+        margin-bottom: 6px;
+    }
+</style>

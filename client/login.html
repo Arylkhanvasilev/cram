@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cram - Вход</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Onest', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .auth-top {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .auth-icon {
+            width: 80px;
+            height: 80px;
+            background: #A4FF55;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 24px;
+        }
+
+        .auth-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .auth-desc {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .auth-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            font-family: 'Onest', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+            background: #f9f9f9;
+        }
+
+        .auth-input:focus {
+            border-color: #A4FF55;
+            background: #fff;
+        }
+
+        .auth-error {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+
+        .auth-bottom {
+            padding: 20px 24px 32px;
+            text-align: center;
+        }
+
+        .auth-link-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .auth-link {
+            font-size: 15px;
+            color: #004001;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 18px;
+            background: #A4FF55;
+            color: #000;
+            border: none;
+            font-family: 'Onest', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 0px 15px 36px;
+            border-radius: 20px;
+        }
+
+        .auth-btn:hover {
+            background: #8FE048;
+        }
+
+        .auth-btn:active {
+            background: #7DC940;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- Верхняя часть (центр) -->
+        <div class="auth-top">
+            <div class="auth-icon"> <img src="assets/icons/Logo.svg" alt="Cram" style="width: 124px;">
+            </div>
+            <h1 class="auth-title">Войти</h1>
+            <p class="auth-desc">Для входа введи свою почту и пароль.</p>
+
+            <div class="auth-error" id="errorMsg"></div>
+
+            <form class="auth-form" onsubmit="return false;">
+                <input class="auth-input" type="email" id="email" placeholder="Email" required>
+                <input class="auth-input" type="password" id="password" placeholder="Пароль" required>
+            </form>
+        </div>
+
+        <!-- Нижняя часть -->
+        <div class="auth-bottom">
+            <p class="auth-link-text">Нету аккаунта?</p>
+            <a href="register.html" class="auth-link">Тогда создай новый аккаунт</a>
+        </div>
+
+        <!-- Кнопка (прикреплена снизу) -->
+        <button class="auth-btn" onclick="login()">Войти</button>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorEl = document.getElementById('errorMsg');
+
+            if (!email || !password) {
+                errorEl.textContent = 'Заполните все поля';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(CONFIG.API_URL + '/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Ошибка входа');
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'index.html';
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.style.display = 'block';
+            }
+        }
+
+        document.getElementById('password').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+
+</html>

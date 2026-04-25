@@ -1,0 +1,50 @@
+/* ===== LAYOUT ===== */
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    background: var(--color-bg);
+}
+
+@media (min-width: 500px) {
+    .app {
+        border-left: 1px solid var(--color-border);
+        border-right: 1px solid var(--color-border);
+    }
+}
+
+.main-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px 16px 100px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.main-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.main-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 2px;
+}
+
+/* Декоративный фон */
+.bg-decoration {
+    position: fixed;
+    top: -120px;
+    right: -80px;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}

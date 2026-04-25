@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cram - Регистрация</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Onest', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .top {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .icon {
+            width: 124px;
+            height: 120px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            font-family: 'Onest', sans-serif;
+            font-size: 15px;
+            margin-bottom: 10px;
+            outline: none;
+            background: #f9f9f9;
+        }
+
+        .input:focus {
+            border-color: #A4FF55;
+            background: #fff;
+        }
+
+        .error {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .success {
+            background: #E9FFD6;
+            color: #004001;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .code-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .code-inputs input {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-family: 'Onest', sans-serif;
+            outline: none;
+        }
+
+        .code-inputs input:focus {
+            border-color: #A4FF55;
+        }
+
+        .bottom {
+            padding: 20px 24px 32px;
+            text-align: center;
+        }
+
+        .link-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .link {
+            font-size: 15px;
+            color: #004001;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: #A4FF55;
+            color: #000;
+            border: none;
+            font-family: 'Onest', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 20px;
+            margin: 0 15px 36px;
+        }
+
+        .btn:hover {
+            background: #8FE048;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="top">
+            <div class="icon" style="overflow: hidden; padding: 0;">
+                <img src="assets/icons/Logo.svg" alt="Cram"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
+            </div>
+            <!-- Шаг 1: Форма -->
+            <div id="step1">
+                <h1 class="title">Давай познакомимся!</h1>
+                <p class="subtitle">Напиши свое имя, почту, придумай пароль и укажи класс</p>
+                <div class="error" id="error1"></div>
+                <input class="input" type="text" id="regName" placeholder="Имя">
+                <input class="input" type="email" id="regEmail" placeholder="Email">
+                <input class="input" type="password" id="regPassword" placeholder="Придумай пароль">
+                <input class="input" type="password" id="regPassword2" placeholder="Повтори пароль">
+                <input class="input" type="number" id="regGrade" placeholder="Класс (1-11)" min="1" max="11">
+                <select class="input" id="regRole" style="color: #000;">
+                    <option value="student">Я ученик</option>
+                    <option value="teacher">Я учитель</option>
+                    <option value="parent">Я родитель</option>
+                </select>
+            </div>
+
+            <!-- Шаг 2: Код -->
+            <div id="step2" class="hidden">
+                <h1 class="title">Подтверждение</h1>
+                <p class="subtitle">Мы отправили код на <strong id="emailDisplay"></strong>. Введи его ниже:</p>
+                <div class="error" id="error2"></div>
+                <div class="success" id="success2"></div>
+                <div class="code-inputs" id="codeInputs">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                    <input type="text" maxlength="1" oninput="nextCode(this)">
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom" id="bottom1">
+            <p class="link-text">Уже есть аккаунт?</p>
+            <a href="login.html" class="link">Войти</a>
+        </div>
+
+        <button class="btn" id="btn1" onclick="sendCode()">Дальше</button>
+        <button class="btn hidden" id="btn2" onclick="verifyCode()">Завершить регистрацию</button>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        let regData = {};
+
+        function showError(el, msg) {
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError(el) {
+            el.style.display = 'none';
+        }
+
+        async function sendCode() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const password2 = document.getElementById('regPassword2').value.trim();
+            const grade = parseInt(document.getElementById('regGrade').value) || null;
+            const role = document.getElementById('regRole').value;
+            const errorEl = document.getElementById('error1');
+
+            hideError(errorEl);
+
+            if (!name || !email || !password) {
+                showError(errorEl, 'Заполните все поля');
+                return;
+            }
+            if (password.length < 6) {
+                showError(errorEl, 'Пароль минимум 6 символов');
+                return;
+            }
+            if (password !== password2) {
+                showError(errorEl, 'Пароли не совпадают');
+                return;
+            }
+
+            regData = { name, email, password, role, grade };
+
+            try {
+                const res = await fetch(CONFIG.API_URL + '/auth/send-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(regData)
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+
+                // Переход к шагу 2
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+                document.getElementById('bottom1').classList.add('hidden');
+                document.getElementById('btn1').classList.add('hidden');
+                document.getElementById('btn2').classList.remove('hidden');
+                document.getElementById('emailDisplay').textContent = email;
+                document.getElementById('codeInputs').querySelector('input').focus();
+
+            } catch (err) {
+                showError(errorEl, err.message);
+            }
+        }
+
+        function nextCode(input) {
+            if (input.value.length === 1 && input.nextElementSibling) {
+                input.nextElementSibling.focus();
+            }
+        }
+
+        function getCode() {
+            const inputs = document.querySelectorAll('#codeInputs input');
+            return Array.from(inputs).map(i => i.value).join('');
+        }
+
+        async function verifyCode() {
+            const code = getCode();
+            const errorEl = document.getElementById('error2');
+
+            if (code.length < 6) {
+                showError(errorEl, 'Введите 6-значный код');
+                return;
+            }
+
+            try {
+                const res = await fetch(CONFIG.API_URL + '/auth/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: regData.email, code })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'index.html';
+
+            } catch (err) {
+                showError(errorEl, err.message);
+            }
+        }
+    </script>
+</body>
+
+</html>
