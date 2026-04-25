@@ -1,0 +1,66 @@
+<div class="bounded-block">
+    <header class="top-bar">
+        <div class="top-bar__user">
+            <div class="avatar avatar--md" style="background: var(--color-primary);">
+                <span id="avatarText">?</span>
+            </div>
+            <div class="user-text">
+                <span class="user-name" id="userName">Загрузка...</span>
+            </div>
+        </div>
+        <a href="notifications.html" class="notif-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </a>
+    </header>
+    <h2 class="today-title">Сегодня</h2>
+    <div class="progress-block">
+        <div class="progress-block__header">
+            <span class="progress-block__title">Выполнено</span>
+            <span class="progress-block__stats" id="progressStats">0 из 0 задач</span>
+        </div>
+        <div class="progress">
+            <div class="progress__fill" id="progressFill" style="width:0%;"></div>
+        </div>
+        <div class="progress-block__footer">
+            <span class="progress-block__percent" id="progressPercent">Прогресс 0%</span>
+            <span class="progress-block__remaining" id="progressRemaining">Осталось 0</span>
+        </div>
+    </div>
+    <!-- AI Кнопки -->
+    <div style="display: flex; gap: 8px; margin-top: 16px;">
+        <button class="btn-ai" onclick="generateSchedule()" id="btnSchedule">
+            🤖 Расписание на сегодня
+        </button>
+        <button class="btn-ai" onclick="refreshAIInsights()" id="btnInsights">
+            💡 Совет AI
+        </button>
+    </div>
+</div>
+<!-- AI Расписание -->
+<div class="ai-schedule-block" id="aiScheduleBlock" style="display: none;">
+    <div class="ai-schedule-content" id="aiScheduleContent"></div>
+</div>
+<div class="date-scroll" id="dateScroll"></div>
+<div class="section-head">
+    <h2 class="section-title">Задачи</h2>
+    <button class="btn-icon" id="addTaskBtn" style="display:none;">+</button>
+</div>
+<div id="tasksContainer"></div>
+<div class="section-head section-head--past">
+    <h2 class="section-title">Прошлые</h2>
+</div>
+<div id="pastTasksContainer"></div>
+
+<script>
+    // Ждём загрузки DOM и запускаем
+    setTimeout(function () {
+        if (window.currentDashboard) {
+            window.currentDashboard.destroyed = true;
+        }
+        window.currentDashboard = new DashboardController();
+        window.currentDashboard.init();
+    }, 200);
+</script>

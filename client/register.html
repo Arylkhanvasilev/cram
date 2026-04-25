@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cram - Регистрация</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Onest', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-logo {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-logo-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        .auth-logo-text {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #004001;
+        }
+
+        .auth-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 30px 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 14px;
+            font-family: 'Onest', sans-serif;
+            font-size: 15px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: #004001;
+        }
+
+        .auth-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 14px;
+            font-family: 'Onest', sans-serif;
+            font-size: 15px;
+            margin-bottom: 12px;
+            outline: none;
+            background: #fff;
+            color: #000;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: #004001;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Onest', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: #006602;
+        }
+
+        .auth-error {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+            margin-bottom: 12px;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .auth-link a {
+            color: #004001;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <div class="auth-icon">
+                <img src="assets/icons/Logo.svg" alt="Cram" style="width: 124px;">
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <h1 class="auth-title">Регистрация</h1>
+            <p class="auth-subtitle">Создайте новый аккаунт</p>
+
+            <div class="auth-error" id="errorMsg"></div>
+
+            <input class="auth-input" type="text" id="name" placeholder="Имя и фамилия" required>
+            <input class="auth-input" type="email" id="email" placeholder="Email" required>
+            <input class="auth-input" type="password" id="password" placeholder="Пароль (мин. 6 символов)" required>
+            <select class="auth-select" id="role" required>
+                <option value="">Выберите роль</option>
+                <option value="student">Ученик</option>
+                <option value="teacher">Учитель</option>
+                <option value="parent">Родитель</option>
+            </select>
+            <button class="auth-btn" onclick="register()">Зарегистрироваться</button>
+
+            <p class="auth-link">
+                Уже есть аккаунт? <a href="login.html">Войти</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        async function register() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const role = document.getElementById('role').value;
+            const errorEl = document.getElementById('errorMsg');
+
+            if (!name || !email || !password || !role) {
+                errorEl.textContent = 'Заполните все поля';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorEl.textContent = 'Пароль должен быть не менее 6 символов';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(CONFIG.API_URL + '/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, role })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error || 'Ошибка регистрации');
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'index.html';
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

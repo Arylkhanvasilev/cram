@@ -1,0 +1,54 @@
+<div class="bounded-block">
+    <h2 class="today-title">📊 Статистика</h2>
+</div>
+<div class="stats-grid">
+    <div class="card">
+        <div class="stat-value" id="totalTasks">0</div>
+        <div class="stat-label">Всего</div>
+    </div>
+    <div class="card">
+        <div class="stat-value" id="doneTasks">0</div>
+        <div class="stat-label">Сделано</div>
+    </div>
+    <div class="card">
+        <div class="stat-value" id="overdueTasks">0</div>
+        <div class="stat-label">Просрочено</div>
+    </div>
+    <div class="card">
+        <div class="stat-value" id="avgGrade">-</div>
+        <div class="stat-label">Ср. балл</div>
+    </div>
+</div>
+<h3 style="margin-bottom:16px;">По предметам</h3>
+<div class="card" id="subjectsStats"></div>
+
+<script>
+    async function initStatistics() {
+        const user = Auth.getUser();
+        if (!user) return;
+        try {
+            const tasks = await api.get('/assignments');
+            document.getElementById('totalTasks').textContent = tasks.length;
+            document.getElementById('doneTasks').textContent = tasks.filter(t => t.status !== 'pending').length;
+            document.getElementById('overdueTasks').textContent = tasks.filter(t => t.status === 'pending' && new Date(t.deadline) < new Date()).length;
+            const graded = tasks.filter(t => t.grade).map(t => t.grade);
+            document.getElementById('avgGrade').textContent = graded.length ? (graded.reduce((a, b) => a + b, 0) / graded.length).toFixed(1) : '-';
+
+            const subjects = {};
+            tasks.forEach(t => {
+                const s = t.subject || 'Другое';
+                if (!subjects[s]) subjects[s] = { total: 0, done: 0 };
+                subjects[s].total++;
+                if (t.status !== 'pending') subjects[s].done++;
+            });
+            let html = '';
+            for (const [name, stats] of Object.entries(subjects)) {
+                const pct = Math.round((stats.done / stats.total) * 100);
+                html += `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border-light);"><span>${name}</span><span style="font-weight:700;">${stats.done}/${stats.total} (${pct}%)</span></div>`;
+            }
+            document.getElementById('subjectsStats').innerHTML = html || '<p>Нет данных</p>';
+        } catch (e) { }
+    }
+
+    setTimeout(initStatistics, 100);
+</script>

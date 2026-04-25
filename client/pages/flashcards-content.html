@@ -1,0 +1,58 @@
+<div class="section-head">
+    <h2 class="section-title">📚 Карточки</h2>
+    <button class="btn-icon" onclick="generateFlashcards()">+</button>
+</div>
+
+<div id="flashcardsContainer">
+    <div class="flashcard" id="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+            <div class="flashcard-front" id="cardFront">Создайте карточки</div>
+            <div class="flashcard-back" id="cardBack">Нажмите + чтобы начать</div>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 12px;">
+        <button class="btn" onclick="prevCard()" style="margin-right: 8px;">←</button>
+        <span id="cardCounter">0/0</span>
+        <button class="btn" onclick="nextCard()" style="margin-left: 8px;">→</button>
+    </div>
+</div>
+
+<script>
+    let cards = [];
+    let currentCard = 0;
+
+    async function generateFlashcards() {
+        const subject = prompt('Предмет?', 'История');
+        const topic = prompt('Тема?', 'Великая Отечественная война');
+        if (!subject || !topic) return;
+
+        try {
+            showToast('🤖 Генерирую карточки...');
+            const result = await api.post('/ai/generate-flashcards', { subject, topic, count: 10 });
+            cards = result.cards;
+            currentCard = 0;
+            updateCard();
+            showToast(`✅ ${cards.length} карточек готово!`);
+        } catch (e) {
+            showToast('❌ Ошибка', 'error');
+        }
+    }
+
+    function updateCard() {
+        if (cards.length === 0) return;
+        document.getElementById('cardFront').textContent = cards[currentCard].front;
+        document.getElementById('cardBack').textContent = cards[currentCard].back;
+        document.getElementById('cardCounter').textContent = `${currentCard + 1}/${cards.length}`;
+        document.getElementById('flashcard').classList.remove('flipped');
+    }
+
+    function nextCard() {
+        currentCard = (currentCard + 1) % cards.length;
+        updateCard();
+    }
+
+    function prevCard() {
+        currentCard = (currentCard - 1 + cards.length) % cards.length;
+        updateCard();
+    }
+</script>

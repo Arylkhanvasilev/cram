@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cram</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/app-spa.js"></script>
+</head>
+
+<style>
+    .btn-ai-teacher {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #E9FFD6, #FEBD59);
+        border: none;
+        border-radius: var(--radius-lg);
+        font-family: var(--font-primary);
+        font-size: 14px;
+        font-weight: var(--font-semibold);
+        color: var(--color-text);
+        cursor: pointer;
+        transition: var(--transition-base);
+    }
+
+    .btn-ai-teacher:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .ai-idea-card {
+        background: var(--color-bounded-bg);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        margin-top: 8px;
+        cursor: pointer;
+        transition: var(--transition-fast);
+    }
+
+    .ai-idea-card:hover {
+        background: #D4E8C2;
+    }
+</style>
+
+<body>
+    <div class="app">
+        <!-- Контент меняется здесь -->
+        <main class="main-scroll" id="appContent">
+            <div style="text-align:center;padding:40px;">Загрузка...</div>
+        </main>
+
+        <!-- Навбар (всегда виден) -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="dashboard">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-item" data-page="tasks">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button <button class="nav-item" data-page="statistics">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-item" data-page="students">👥</button>
+            <button class="nav-item" data-page="ai">🤖</button>
+            <button class="nav-item nav-item--profile" data-page="profile">
+                <div class="avatar avatar--sm" style="background: var(--color-primary);" id="navAvatarFallback">?</div>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Модалка создания задачи -->
+    <div class="modal" id="taskModal" style="display: none;">
+        <div class="modal__backdrop" onclick="closeModal()"></div>
+        <div class="modal__sheet">
+            <div class="modal__handle"></div>
+            <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 20px;">Новая
+                задача</h3>
+            <form id="taskForm" onsubmit="return false;">
+                <input class="input" type="text" id="taskTitle" placeholder="Название задачи" required>
+                <textarea class="input" id="taskDesc" rows="2" placeholder="Описание"
+                    style="margin-top:8px;"></textarea>
+                <div style="display:flex;gap:10px;margin-top:8px;">
+                    <input class="input" type="text" id="taskSubject" placeholder="Предмет" required style="flex:1;">
+                    <input class="input" type="datetime-local" id="taskDeadline" required style="flex:1;">
+                </div>
+
+                <!-- Выбор классов -->
+                <div style="margin-top:16px;">
+                    <label style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">
+                        📚 Выберите классы для задания:
+                    </label>
+                    <div id="classCheckboxes"
+                        style="max-height:200px;overflow-y:auto;background:var(--color-bg);border-radius:12px;padding:8px;">
+                        <p style="color:var(--color-text-muted);font-size:13px;padding:8px;">Загрузка классов...</p>
+                    </div>
+                    <p id="classWarning" style="color:#EF4444;font-size:13px;margin-top:8px;display:none;">
+                        ⚠️ Выберите хотя бы один класс
+                    </p>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-primary-full" style="margin-top:16px;"
+                    id="submitTaskBtn" disabled onclick="submitTaskForm()">
+                    Выберите класс
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="notificationContainer"></div>
+
+</body>
+
+</html>

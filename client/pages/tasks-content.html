@@ -1,0 +1,19 @@
+<div class="section-head">
+    <h2 class="section-title">Задачи</h2>
+    <button class="btn-icon" id="addTaskBtn" style="display:none;">+</button>
+</div>
+<div id="tasksContainer"></div>
+<div class="section-head section-head--past">
+    <h2 class="section-title">Прошлые</h2>
+</div>
+<div id="pastTasksContainer"></div>
+
+<script>
+    setTimeout(function () {
+        if (window.currentTasks) {
+            window.currentTasks = null;
+        }
+        window.currentTasks = new TasksController();
+        window.currentTasks.init();
+    }, 200);
+</script>
